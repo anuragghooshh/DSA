@@ -30,11 +30,14 @@ void dequeue(CQ *p){
     p->bool = FALSE;
 }
 
-void printQueue(CQ *cq){
-    printf("\n\n");
-    for(int i=0; i<MAX; i++){
-        printf("\t%d",cq->info[i]);
-    }
+void show(CQ *cq){
+    printf("\n\nFront -> ");
+    int i = cq->front;
+    do {
+        i = (i + 1) % MAX;
+        printf("%d ", cq->info[i]);
+    } while (i != cq->rear);
+    printf("-> Rear\n");
 }
 
 int main() {
@@ -66,5 +69,5 @@ int main() {
         }
     }while(choice!=0);
     
-    printQueue(&cq);
+    show(&cq);
 }

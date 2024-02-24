@@ -1,115 +1,117 @@
 #include <stdio.h>
 #define MAX 5
-#define TRUE 1
-#define FALSE 0
-typedef struct dequeue{
-	 int info[MAX];
-	 int rear,front;
-	 int bool;
-}DQ;
 
-void enqueue(DQ *p, int item, int qno){
+typedef struct dequeue {
+    int info[MAX];
+    int rear, front;
+} DQ;
 
-	 if(p->front+1 == p->rear){
-		  printf("\nDQ OVERFLOW");
-		  return;
-	 }
+void enqueue(DQ *p, int item, int qno) {
+    if ((p->rear == MAX && p->front == -1) || (p->front == p->rear + 1)) {
+        printf("\nDQ OVERFLOW");
+        return;
+    }
 
-	 switch(qno){
-		  case 1:
-				p->front = p->front+1;
-				p->info[p->front] = item;
-				break;
-		  case 2:
-				p->rear = p->rear-1;
-				p->info[p->rear] = item;
-				break;
-	 }
-
+    switch (qno) {
+        case 1:
+            if (p->front == -1)
+                p->front = p->rear = 0;
+            else
+                p->front = (p->front - 1 + MAX) % MAX;
+            p->info[p->front] = item;
+            break;
+        case 2:
+            if (p->front == -1)
+                p->front = p->rear = 0;
+            else
+                p->rear = (p->rear + 1) % MAX;
+            p->info[p->rear] = item;
+            break;
+    }
 }
 
-void dequeue(DQ *p,int qno){
-	 int i;
-	 switch(qno){
-		  case 1:
-				if(p->front<0){
-					 printf("\nUNDERFLOW");
-					 return;
-				}
-				for(i=1;i<=p->front;i++){
-					 p->info[i-1] = p->info[i];
-				}
-				p->front = p->front-1;
-				break;
-		  case 2:
-				if(p->rear > MAX -1){
-					 printf("\nUNDERFLOW");
-					 return;
-				}
-				for(i=MAX-2; i>=p->rear; i--){
-					 p->info[i+1] = p->info[i];
-				}
-				p->rear = p->rear+1;
-				break;
-	 }
+void dequeue(DQ *p, int qno) {
+    if (p->front == -1) {
+        printf("\nUNDERFLOW");
+        return;
+    }
 
+    switch (qno) {
+        case 1:
+            if (p->front == p->rear)
+                p->front = p->rear = -1;
+            else
+                p->front = (p->front + 1) % MAX;
+            break;
+        case 2:
+            if (p->front == p->rear)
+                p->front = p->rear = -1;
+            else
+                p->rear = (p->rear - 1 + MAX) % MAX;
+            break;
+    }
 }
 
-void printQueue(DQ *dq){
+void printQueue(DQ *dq) {
     printf("\n\n");
-    printf("%d\t",dq->info[0]);
-    printf("%d\t",dq->info[1]);
-    printf("%d\t",dq->info[2]);
-    printf("%d\t",dq->info[3]);
-    printf("%d\t",dq->info[4]);
+    if (dq->front == -1) {
+        printf("Queue is empty.\n");
+        return;
+    }
+    int i = dq->front;
+    do {
+        printf("%d\t", dq->info[i]);
+        i = (i + 1) % MAX;
+    } while (i != (dq->rear + 1) % MAX);
 }
 
 int main() {
+    DQ dq;
+    int item, choice, qno;
 
-	 DQ dq;
-	 int item, choice,qno;
+    dq.front = dq.rear = -1;
 
-	 dq.front = dq.rear = 0;
+    do {
+        printf("\n1: INSERT");
+        printf("\n2: DELETE");
+        printf("\n0: EXIT");
 
-	 do{
-		  printf("\n1:INSERT");
-		  printf("\n2:DELETE");
-		  printf("\n0:EXIT");
+        printf("\n\nENTER YOUR CHOICE : ");
+        scanf("%d", &choice);
 
-		  printf("\n\nENTER YOUR CHOICE : ");
+        switch (choice) {
+            case 1:
+                printf("\n\n1: At front");
+                printf("\n\n2: At Rear");
+                printf("\nENTER YOUR CHOICE : ");
+                scanf("%d", &qno);
 
-		  scanf("%d",&choice);
+                printf("\nENTER VALUE : ");
+                scanf("%d", &item);
 
-		  switch(choice){
-				case 1:
-					 printf("\n\n1:At front");
-					 printf("\n\n2:At Rear");
-					 printf("\nENTER YOUR CHOICE : ");
-					 scanf("%d", &qno);
+                enqueue(&dq, item, qno);
+                break;
 
-					 printf("\nENTER VALUE : ");
-					 scanf("%d", &item);
+            case 2:
+                printf("\n\n1: At front");
+                printf("\n\n2: At Rear");
+                printf("\nENTER YOUR CHOICE : ");
+                scanf("%d", &qno);
 
-					 enqueue(&dq, item, qno);
-					 break;
+                dequeue(&dq, qno);
+                break;
 
-				case 2:
-					 printf("\n\n1:At front");
-					 printf("\n\n2:At Rear");
-					 printf("\nENTER YOUR CHOICE : ");
-					 scanf("%d", &qno);
+            case 0:
+                printf("\nExiting.\n");
+                break;
 
-					 dequeue(&dq, qno);
-					 break;
+            default:
+                printf("\nInvalid choice.\n");
+                break;
+        }
+    } while (choice != 0);
 
-				case 0: printf("\nTUFUTS");
-						  break;
+    printQueue(&dq);
 
-				default:printf("\nWCTA");
-						  break;
-		  }
-
-	 }while(choice!=0);
-
-	 printQueue(&dq);
+    return 0;
 }

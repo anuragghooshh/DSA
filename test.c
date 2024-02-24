@@ -1,14 +1,17 @@
-#include<stdio.h>
-
-void function(int *arr){
-    printf("\t%d",arr[0]);
-    printf("\t%d",*(arr+1));
-    printf("\t%d",*arr+1);
-}
-
-int main(){
-    int arr[] = {45,81,620};
-    function(arr);
-
+#include <stdio.h>
+int main()
+{
+    int x = 1;
+    switch (x){
+        case x:
+            printf("case 1");
+            break;
+        case x + 1:
+            printf("case 2 ");
+            break;
+        default:
+            printf("default block");
+            break;
+    }
     return 0;
 }

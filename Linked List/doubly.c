@@ -31,9 +31,10 @@ void print(Node *head){
     head=head->next_add;
     printf("\n");
     while(head!=NULL){
-        printf("%d->",head->data);
+        printf("|%X| %d |%X| <=> ",head->prev_add,head->data,head->next_add);
         head=head->next_add;
     }
+    printf("NULL");
 }
 
 int main(){
